@@ -457,5 +457,24 @@ Or should it?")]
         interface IFirstInterface { }
         interface ISecondInterface { }
         class PolymorphicMessage : IFirstInterface, ISecondInterface { }
+
+        [Test]
+        public void TransportMessageSentEventIsRaisedWhenMessageIsSent()
+        {
+            // Arrange
+            var bus = CreateTheBus();
+            var fired = false;
+            bus.Events.TransportMessageSent += (destination, message, published) =>
+                {
+                    fired = true;
+                };
+            bus.Start();
+
+            // Act
+            bus.Send<object>(new Object());
+
+            // Assert
+            Assert.IsTrue(fired);
+        }
     }
 }
