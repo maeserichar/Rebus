@@ -59,6 +59,9 @@ namespace Rebus.Bus
         }
 
         public event Action<object, Saga> UncorrelatedMessage = delegate { };
+        public event Func<object, ISagaData, bool> BeforeHandling = delegate { return true; };
+        public event Action<object, ISagaData> AfterHandling = delegate { };
+        public event Action<Exception> OnHandlingError = delegate { };
 
         /// <summary>
         /// Main entry point of the dispatcher. Dispatches the given message, doing handler
@@ -253,6 +256,8 @@ This most likely indicates that you have configured this Rebus service to use an
         // ReSharper disable UnusedMember.Local
         void DispatchToHandler<TMessage>(TMessage message, IHandleMessages<TMessage> handler)
         {
+            Exception exception = null;
+
             var saga = handler as Saga;
             if (saga != null)
             {
@@ -284,14 +289,47 @@ This most likely indicates that you have configured this Rebus service to use an
 
                 using (new SagaContext(sagaData.Id))
                 {
-                    handler.Handle(message);
-                    PerformSaveActions(saga, sagaData);
+                    try
+                    {
+                        if (BeforeHandling(message, sagaData))
+                        {
+                            handler.Handle(message);
+                            PerformSaveActions(saga, sagaData);
+                            AfterHandling(message, sagaData); 
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        exception = ex;
+                        throw;
+                    }
+                    finally
+                    {
+                        OnHandlingError(exception);
+                    }
                 }
 
                 return;
             }
 
-            handler.Handle(message);
+
+            try
+            {
+                if (BeforeHandling(message, null))
+                {
+                    handler.Handle(message);
+                    AfterHandling(message, null);
+                }
+            }
+            catch (Exception ex)
+            {
+                exception = ex;
+                throw;
+            }
+            finally
+            {
+                OnHandlingError(exception);
+            }
         }
         // ReSharper restore UnusedMember.Local
 
