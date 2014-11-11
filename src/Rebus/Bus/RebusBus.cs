@@ -898,12 +898,12 @@ element and use e.g. .Transport(t => t.UseMsmqInOneWayClientMode())"));
 
         void RaiseAfterHandling(object message, ISagaData sagadata)
         {
-            events.RaiseAfterHandling(message, sagadata);
+            events.RaiseAfterHandling(this, message, sagadata);
         }
 
         bool RaiseBeforeHandling(object message, ISagaData sagadata)
         {
-            return events.RaiseBeforeHandling(message, sagadata);
+            return events.RaiseBeforeHandling(this, message, sagadata);
         }
 
         void RaiseMessageContextEstablished(IMessageContext messageContext)

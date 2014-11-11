@@ -119,14 +119,14 @@ namespace Rebus.Bus
             OnHandlingError(exception);
         }
 
-        internal void RaiseAfterHandling(object message, ISagaData sagadata)
+        internal void RaiseAfterHandling(IBus bus, object message, ISagaData sagadata)
         {
-            AfterHandling(message, sagadata);
+            AfterHandling(bus, message, sagadata);
         }
 
-        internal bool RaiseBeforeHandling(object message, ISagaData sagadata)
+        internal bool RaiseBeforeHandling(IBus bus, object message, ISagaData sagadata)
         {
-            return BeforeHandling(message, sagadata);
+            return BeforeHandling(bus, message, sagadata);
         }
     }
 }
