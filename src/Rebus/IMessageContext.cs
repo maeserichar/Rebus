@@ -50,7 +50,7 @@ namespace Rebus
         /// <summary>
         /// Avoid the processing of the message for the current handler
         /// </summary>
-		bool DoNotHandle { get; set; }
+        bool DoNotHandle { get; set; }
 
 #if DEBUG
         /// <summary>
