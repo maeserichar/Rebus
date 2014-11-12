@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 
+using Rebus.Messages;
+
 namespace Rebus.Bus
 {
     class RebusEvents : IRebusEvents
@@ -40,7 +42,7 @@ namespace Rebus.Bus
 
         public event AfterHandlingEventHandler AfterHandling = delegate { };
 
-        public event BeforeHandlingEventHandler BeforeHandling = delegate { return true; };
+        public event BeforeHandlingEventHandler BeforeHandling = delegate { };
 
         public ICollection<IMutateMessages> MessageMutators { get; private set; }
 
@@ -64,7 +66,7 @@ namespace Rebus.Bus
             MessageSent(bus, destination, message);
         }
 
-        internal void RaiseTransportMessageSent(IEnumerable<string> destinations, object message, bool published)
+        internal void RaiseTransportMessageSent(IEnumerable<string> destinations, Message message, bool published)
         {
             TransportMessageSent(destinations, message, published);
         }
@@ -119,14 +121,14 @@ namespace Rebus.Bus
             OnHandlingError(exception);
         }
 
-        internal void RaiseAfterHandling(IBus bus, object message, ISagaData sagadata)
+        internal void RaiseAfterHandling(IBus bus, object message, IHandleMessages handler)
         {
-            AfterHandling(bus, message, sagadata);
+            AfterHandling(bus, message, handler);
         }
 
-        internal bool RaiseBeforeHandling(IBus bus, object message, ISagaData sagadata)
+        internal void RaiseBeforeHandling(IBus bus, object message, IHandleMessages handler)
         {
-            return BeforeHandling(bus, message, sagadata);
+            BeforeHandling(bus, message, handler);
         }
     }
 }

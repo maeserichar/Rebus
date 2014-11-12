@@ -47,6 +47,11 @@ namespace Rebus
         /// </summary>
         IDictionary<string, object> Headers { get; }
 
+        /// <summary>
+        /// Avoid the processing of the message for the current handler
+        /// </summary>
+		bool DoNotHandle { get; set; }
+
 #if DEBUG
         /// <summary>
         /// Gets the stack trace of the place in the code where this message context was created. Only on the message context in debug build though

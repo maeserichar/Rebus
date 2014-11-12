@@ -137,6 +137,8 @@ Stacktrace of when the current message context was created:
             get { return current != null; }
         }
 
+		public bool DoNotHandle { get; set; }
+
         /// <summary>
         /// Indicates whether message dispatch has been aborted in this message context
         /// </summary>
