@@ -300,8 +300,8 @@ This most likely indicates that you have configured this Rebus service to use an
                         if (context == null || !context.DoNotHandle)
                         {
                             handler.Handle(message);
-                            PerformSaveActions(saga, sagaData);
                             AfterHandling(message, handler); 
+                            PerformSaveActions(saga, sagaData);
                         }
                     }
                     catch (Exception ex)
