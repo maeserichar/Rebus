@@ -13,7 +13,7 @@ namespace Rebus.Tests.Transports.Rabbit
 {
     public abstract class RabbitMqFixtureBase : IDetermineMessageOwnership
     {
-        public const string ConnectionString = "amqp://guest:guest@localhost";
+        public const string ConnectionString = "amqp://guest:guest@db.herma-ricardo.dev";
 
         protected readonly List<string> queuesToDelete = new List<string>();
 
